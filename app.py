@@ -1,9 +1,25 @@
-from flask import Flask,request,jsonify
+import os
+from flask import Flask,request,jsonify,render_template
 from flask_cors import CORS
 from bert import QA
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='views')
 CORS(app)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        form = request.form
+        result = []
+        document = form['document']
+        question = form['question']
+        result.append(form['question'])
+        result.append(QA.getAnswer(question, document))
+        result.append(form['document'])
+
+        return render_template("prediction.html",result = result)
+    return render_template("prediction.html")
+
 
 @app.route("/predict",methods=['POST', 'GET'])
 def predict():
@@ -40,4 +56,5 @@ def generate():
 
 
 if __name__ == "__main__":
-    app.run('0.0.0.0',port=8000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run('0.0.0.0',port=port)

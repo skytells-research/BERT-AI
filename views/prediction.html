@@ -1,0 +1,97 @@
+<html>
+   <head>
+      <title>ALBERT - QnA</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+   </head>
+   <body>
+      <div class="container">
+         <div class="row">
+            <div class="col-xl-8 offset-xl-2 py-5">
+               <h2><a>ALBERT AI</a></h2>
+               <p class="lead">Write a paragraph then try asking some questions..</p>
+               <br>
+                  <div class="form-group row">
+                     <label for="textarea" class="col-4 col-form-label">Paragraph</label> 
+                     <div class="col-8">
+                        <textarea id="document" name="document" cols="40" rows="5" class="form-control document"></textarea>
+                     </div>
+                  </div>
+                  <div class="form-group row">
+                     <label for="question" class="col-4 col-form-label">Question</label> 
+                     <div class="col-8">
+                        <div class="input-group">
+                           <div class="input-group-prepend">
+                              <div class="input-group-text">
+                                 <i class="fa fa-question-circle-o"></i>
+                              </div>
+                           </div>
+                           <input id="question" name="question" type="text" class="form-control question">
+                        </div>
+                     </div>
+                  </div>
+
+
+                  <div class="form-group row">
+                    <label for="results" class="col-4 col-form-label"></label> 
+                    <div class="col-8 bert-results">
+                      
+                    </div>
+                 </div>
+
+
+                 
+                  <div class="form-group row">
+                     <div class="offset-4 col-8">
+                        <button name="submit" class="btn btn-primary predict">Predict</button>
+                     </div>
+                  </div>
+             
+            </div>
+         </div>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>        
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js" integrity="sha256-dHf/YjH1A4tewEsKUSmNnV05DDbfGN3g7NMq86xgGh8=" crossorigin="anonymous"></script>
+      <script>
+         $(function () {
+         
+            $( ".predict" ).click(function() {
+                $('.predict').empty().html("Predicting..");
+                $('.predict').prop('disabled', true);
+                $('.bert-results').empty();
+                var bertData = {
+                    "document": $('#document').val(),
+                    "question": $('#question').val(),
+                    };
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict',
+                    data: JSON.stringify(bertData),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                    success: function(data) { 
+                        $('.predict').prop('disabled', false);
+                        $('.predict').empty().html("Predict");
+                        var messageAlert = 'alert-success';
+                        var messageText = data.answer;
+                        var alertBox = '<div class="alert ' + messageAlert + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + data.answer + '</div>';
+                        if (messageAlert && messageText) {
+                            $('.bert-results').empty().html(alertBox);
+                        }
+                    }
+                });  
+            });
+         
+         });
+      </script>
+   </body>
+</html>
