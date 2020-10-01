@@ -2,6 +2,7 @@ import os
 from flask import Flask,request,jsonify,render_template
 from flask_cors import CORS
 from bert import QA
+import gc
 
 app = Flask(__name__, template_folder='views')
 CORS(app)
@@ -13,10 +14,12 @@ def index():
 
 @app.route("/predict",methods=['POST', 'GET'])
 def predict():
+    gc.collect()
     document = request.json["document"]
     question = request.json["question"]
     try:
         out = QA.getAnswer(question, document)
+        gc.collect()
         return jsonify(out)
     except Exception as e:
         print(e)
