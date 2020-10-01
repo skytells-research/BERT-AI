@@ -8,16 +8,6 @@ CORS(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        form = request.form
-        result = []
-        document = form['document']
-        question = form['question']
-        result.append(form['question'])
-        result.append(QA.getAnswer(question, document))
-        result.append(form['document'])
-
-        return render_template("prediction.html",result = result)
     return render_template("prediction.html")
 
 
@@ -26,7 +16,6 @@ def predict():
     document = request.json["document"]
     question = request.json["question"]
     try:
-     
         out = QA.getAnswer(question, document)
         return jsonify(out)
     except Exception as e:
