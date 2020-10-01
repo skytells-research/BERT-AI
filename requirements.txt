@@ -1,0 +1,4 @@
+transformers
+numpy
+flask
+Flask-Cors==3.0.8
