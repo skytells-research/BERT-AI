@@ -10,8 +10,8 @@ class QA:
         #print(out)
         return out
 
-    def generateText(context, max_length=50, do_sample=False):
+    def generateText(context, max_length, do_sample=False):
         text_generator = pipeline("text-generation")
-        resutls = text_generator(context, max_length=50, do_sample=False)
+        resutls = text_generator(context, max_length=max_length, do_sample=do_sample)
         print(resutls)
         return resutls
