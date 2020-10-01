@@ -26,12 +26,12 @@ def predict():
 def generate():
     context = request.json["context"]
     
-    max_length = 50
+    max_length = 20
     do_sample = False
     if max_length in request.json:
         max_length = request.json["max_length"]
     else:
-        max_length = 50
+        max_length = 20
     if do_sample in request.json:
         do_sample = request.json["do_sample"]
     else:
